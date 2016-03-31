@@ -22,13 +22,17 @@ $(document).keyup(function(e) {
 });
 
 var left = function() {
-
+    // for each row
     for(j=0; j< 4; j++){
         var row = [];
+        // for each column
         for (i = 0; i < 4; i++) {
+            //fetch all 4 col html data for each row, store in row array
             row[i] = $('#row'+j).children(".col" + i).html();
         }
+        //transform data
         row = move(row);
+        // set row array back into table
         for (i = 0; i < 4; i++){
             $('#row'+j).children(".col" + i).html(row[i]);
         }
@@ -109,35 +113,44 @@ var move = function(row) {
     return(output);
 };
 
-var test1 = ["1", "1", "2", "2"];
-var test2 = ["1", "1", "1", "2"];
-var test3 = ["1", "*", "*", "1"];
-var test4 = ["1", "2", "3", "*"];
-var test5 = ["*", "1", "*", "*"];
-var test6 = ["*", "*", "*", "*"];
-
-// steps
-// earliest open space = 0
-// 1. given a position, check if blank
-//     if number check if next is same
-//         if same 
-//             double value, 
-//             delete position, 
-//             delete postion +1, 
-//             assign value to earliest open space
-//             earliest open space +=1
-//         if different
-//             assign value to earlies open space
-//             earliest open space +=1
-//     if blank
-//         next
-// 2. check if blank
-//     if number check if next is same
-//         if same 
-//             double position, put '*' in next position
-//         if different && 
+var test0  = ["*", "1", "*", "*"];  
+var test1  = ["1", "1", "*", "*"];
+var test2  = ["*", "*", "1", "2"];
+var test3  = ["1", "1", "*", "1"];
+var test4  = ["1", "2", "1", "*"];
+var test5  = ["1", "1", "1", "1"];
+var test6  = ["1", "1", "2", "2"];
+var test7  = ["1", "2", "2", "1"];
+var test8  = ["1", "2", "3", "4"];
+var test9  = ["1", "2", "3", "3"];
+var test10 = ["1", "1", "3", "4"];
 
 
 
+var merge = function(row) {
+    // filter out *'s
+    row = row.filter(function(x) {return x != '*';});
+    //double/delete/loop
+    var i = (row.length - 1);
+    while (i > 0) {
+        if (row[i] == row[i-1]) {
+            row[i-1] = (row[i-1]*2).toString();
+            row.splice(i, 1);
+            i--;
+        }
+        i--;
+    }
+    // pad it out
+    var j = row.length;
+    while (j < 4) {
+        row.push('*');
+        j++;
+    }
+    // return it
+    return row;
+};
+
+var numbers = [1, 2, 3, 4, 5];
+var filtered = numbers.filter(function(x) { return x > 3; });
 
 
