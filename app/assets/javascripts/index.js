@@ -23,95 +23,116 @@ $(document).keyup(function(e) {
 
 var left = function() {
     // for each row
-    for(j=0; j< 4; j++){
+    for(var y=0; y<4; y++){
         var row = [];
         // for each column
-        for (i = 0; i < 4; i++) {
+        for (var x = 0; x < 4; x++) {
             //fetch all 4 col html data for each row, store in row array
-            row[i] = $('#row'+j).children(".col" + i).html();
+            row.push($('#Y'+y).children(".X" + x).html());
         }
         //transform data
         row = move(row);
         // set row array back into table
-        for (i = 0; i < 4; i++){
-            $('#row'+j).children(".col" + i).html(row[i]);
+        for (var x = 0; x < 4; x++){
+            $('#Y'+y).children(".X" + x).html(row.shift());
         }
     }        
+    endTurn();
 };
 
 var right = function() {
+     
+    for(var y=0; y<4; y++){
+        var row =[];
+        for(var x=3; x>=0; x--){
+            row.push($('#Y'+y).children(".X"+x).html());
+        }
 
-    for(j=0; j< 4; j++){
-        var row = [];
-        for (i = 0; i < 4; i++) {
-            row[i] = $('#row'+j).children(".col" + i).html();
-        }
         row = move(row);
-        for (i = 0; i < 4; i++){
-            $('#row'+j).children(".col" + i).html(row[i]);
+
+        for (var x=3; x>=0; x--){
+            $('#Y'+y).children(".X"+x).html(row.shift());
         }
-    }         
+    } 
+    endTurn();
 };
 
 var up = function() {
-    for (j=0; j<4; j++) {
+    for (var x=0; x<4; x++){
         var row = [];
-        for (i=0; i<4; i++) {
-            row[i] = $('#row'+i).children(".col" + j).html();
-        }
-        row = move(row);
-        for (i = 0; i < 4; i++){
-            $('#row'+i).children(".col" + j).html(row[i]);
+        for (var y=3; y>=0; y--){
+            row.push($('#Y'+y).children(".X"+x).html());
         }
 
+        row = move(row);
+
+        for(var y=3; y>=0; y--){
+            $('#Y'+y).children(".X"+x).html(row.shift());
+        }
     } 
+    endTurn();
 
 };
 
 var down = function() {
-    for (j=0; j<4; j++) {
+    for (var x=0; x<4; x++){
         var row = [];
-        for (i=0; i<4; i++) {
-            row[i] = $('#row'+i).children(".col" + j).html();
+        for (var y=0; y<4; y++){
+            row.push($('#Y'+y).children(".X"+x).html());
         }
-        row = move(row.reverse());
-        for (i = 0; i < 4; i++){
-            $('#row'+i).children(".col" + j).html(row[i]);
+        row = move(row);
+        for(var y=0; y<4; y++){
+            $('#Y'+y).children(".X"+x).html(row.shift());
         }
+    }
+    endTurn();
+};
 
-    } 
+var youWin = function() {
+    for(var x=0; x<4; x++){
+        for(var y=0; y<4; y++){
+            if($('#Y'+y).children(".X"+x).html() == "2048"){
+                alert("you win");
+            }
+        }
+    }
+};
+
+var youLose = function() {
+    var lose = true;
+    for(var x=0; x<4; x++){
+        for(var y=0; y<4; y++){
+            if($('#Y'+y).children(".X"+x).html() == "*"){
+                lose = false;
+            }
+        }
+    }
+    if(lose){
+        alert("you lose");
+    }
 
 };
 
-// var move = function(row) {
-//     var output = ["*", "*", "*", "*"];
-//     var next_open = 0;
-//     for (i=0; i<4; i++) {
-//         if (row[i] != '*') {
-//             if (row[i] == row[i+1]) {
-//                 output[next_open] = (row[i] * 2).toString();
-//                 row[i] = '*';
-//                 row[i+1] = '*';
-//                 next_open = next_open + 1;
-//             } else if (row[i] == row[i+2]) {
-//                 output[next_open] = (row[i] * 2).toString();
-//                 row[i] = '*';
-//                 row[i+2] = '*';
-//                 next_open = next_open + 1;
-//             } else if (row[i] == row[i+3]) {
-//                 output[next_open] = (row[i] * 2).toString();
-//                 row[i] = '*';
-//                 row[i+3] = '*';
-//                 next_open = next_open + 1;
-//             } else {
-//                 output[next_open] = row[i];
-//                 next_open = next_open + 1;
-//             }
-//         }
+var addSquare = function() {
+    var openSquare = [];
+    for(var x=0; x<4; x++){
+        for(var y=0; y<4; y++){
+            if($('#Y'+y).children(".X"+x).html() == "*"){
+                openSquare.push([x, y]);
+            }
+        }
+    }
+    var randomIndex = Math.floor(Math.random() * openSquare.length); 
+    var twoOrFour = Math.round(Math.random()) * 2 + 2;
+    $('#Y'+ openSquare[randomIndex][1]).children(".X" + openSquare[randomIndex][0]).html(twoOrFour.toString());
 
-//     }
-//     return(output);
-// };
+};
+
+var endTurn = function() {
+    youWin();
+    youLose();
+    addSquare();
+};
 
 var test0  = ["*", "1", "*", "*"];  
 var test1  = ["1", "1", "*", "*"];
